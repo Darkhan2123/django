@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "microshop"
+version = "0.1.0"
+description = ""
+authors = ["Darkhan <aukenov849@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.4"
+uvicorn = {extras = ["standard"], version = "^0.32.0"}
+pydantic = {extras = ["email"], version = "^1.10.9"}
+annotated-types = "^0.7.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

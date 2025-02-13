@@ -1,0 +1,13 @@
+<h1>All CVs</h1>
+{% for cv in cvs %}
+    <h2>
+      <a href="{% url 'cv_detail' cv.id %}">{{ cv.name }}</a>
+    </h2>
+    <p>Email: {{ cv.email }}</p>
+    {% if cv.profile_picture %}
+        <img src="{{ cv.profile_picture.url }}" alt="Profile Picture" width="150">
+    {% else %}
+        <p>No profile picture uploaded.</p>
+    {% endif %}
+    <hr>
+{% endfor %}

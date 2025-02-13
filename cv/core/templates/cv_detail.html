@@ -1,0 +1,24 @@
+<h1>{{ cv.name }}</h1>
+<p>Email: {{ cv.email }}</p>
+
+{% if cv.profile_picture %}
+    <img src="{{ cv.profile_picture.url }}" alt="Profile Picture" width="150">
+{% else %}
+    <p>No profile picture uploaded.</p>
+{% endif %}
+
+<hr>
+
+<!-- Social Media Share Links -->
+<p>Share this CV:</p>
+<a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
+  Share on Facebook
+</a>
+<br>
+<a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text=Check out this CV!">
+  Share on Twitter
+</a>
+<br>
+<a href="https://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}&title=Check%20out%20this%20CV!">
+  Share on LinkedIn
+</a>
