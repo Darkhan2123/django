@@ -1,0 +1,36 @@
+{% extends "frontend/base.html" %}
+{% block content %}
+<h2 class="mb-4">📦 My Orders</h2>
+{% if orders %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th><th>Date</th><th>Status</th><th>Total</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+        <tr>
+          <td>{{ order.id }}</td>
+          <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+          <td>{{ order.status|capitalize }}</td>
+          <td>
+            {% comment %}Calculate total by summing item prices x qty{% endcomment %}
+            {% with total=0 %}
+              {% for item in order.salesorderitem_set.all %}
+                {% with total=total|add:item.quantity|multiply:item.price %}{% endwith %}
+              {% endfor %}
+              {{ total }}
+            {% endwith %}
+          </td>
+          <td>
+            <a href="{% url 'frontend:order_detail' order.id %}" class="btn btn-sm btn-info">View</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>You have no orders yet.</p>
+{% endif %}
+{% endblock %}

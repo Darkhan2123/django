@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - {{ user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <!-- User Profile Card -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        {% if user.profile_image %}
+                            <img src="{{ user.profile_image.url }}" alt="Profile" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                        {% else %}
+                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 150px; height: 150px; margin: 0 auto;">
+                                <h1>{{ user.get_initials }}</h1>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <h4 class="card-title text-center">{{ user.get_full_name }}</h4>
+                    <p class="text-muted text-center">{{ user.role }}</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'users:profile' %}" class="btn btn-primary">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Recent Trading Orders</h5>
+                </div>
+                <div class="card-body">
+                    {% if trading_orders %}
+                        <div class="list-group">
+                            {% for order in trading_orders %}
+                                <a href="{% url 'trading:order-detail' order.id %}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ order.product.name }}</h6>
+                                        <small>{{ order.created_at|date }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ order.get_order_type_display }} - {{ order.quantity }} units at {{ order.price }}</p>
+                                    <small class="text-muted">Status: {{ order.get_status_display }}</small>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No recent trading orders.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Recent Sales Orders</h5>
+                </div>
+                <div class="card-body">
+                    {% if sales_orders %}
+                        <div class="list-group">
+                            {% for order in sales_orders %}
+                                <a href="{% url 'sales:order-detail' order.id %}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Order #{{ order.order_number }}</h6>
+                                        <small>{{ order.created_at|date }}</small>
+                                    </div>
+                                    <p class="mb-1">Total: {{ order.total_amount }}</p>
+                                    <small class="text-muted">Status: {{ order.get_status_display }}</small>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No recent sales orders.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

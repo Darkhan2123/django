@@ -1,0 +1,30 @@
+{% extends "frontend/base.html" %}
+{% block content %}
+<h2 class="mb-4">📈 Trading Orders</h2>
+{% if orders %}
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>ID</th><th>Product</th><th>Type</th><th>Quantity</th><th>Price</th><th>Date</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+        <tr>
+          <td>{{ order.id }}</td>
+          <td>{{ order.product.name }}</td>
+          <td>{{ order.order_type|capitalize }}</td>
+          <td>{{ order.quantity }}</td>
+          <td>{{ order.price }}</td>
+          <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+          <td>
+            <a href="{% url 'frontend:trading_order_detail' order.id %}" class="btn btn-sm btn-info">View</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No trading orders found.</p>
+{% endif %}
+{% endblock %}

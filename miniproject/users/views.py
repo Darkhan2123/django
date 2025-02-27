@@ -1,4 +1,9 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login, authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView, UpdateView
+from django.urls import reverse_lazy
 from rest_framework import generics, permissions, status, filters
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
@@ -112,3 +117,50 @@ class CurrentUserView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+
+
+# Template-based Views
+class UserDashboardView(LoginRequiredMixin, DetailView):
+    model = User
+    template_name = 'users/dashboard.html'
+    context_object_name = 'user'
+
+    def get_object(self):
+        return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['trading_orders'] = user.trading_orders.all()[:5]
+        context['sales_orders'] = user.sales_orders.all()[:5]
+        return context
+
+class UserProfileView(LoginRequiredMixin, UpdateView):
+    model = User
+    template_name = 'users/profile.html'
+    fields = ['first_name', 'last_name', 'email', 'profile_image']
+    success_url = reverse_lazy('users:dashboard')
+
+    def get_object(self):
+        return self.request.user
+
+def register_view(request):
+    if request.method == 'POST':
+        serializer = UserCreateSerializer(data=request.POST)
+        if serializer.is_valid():
+            user = serializer.save()
+            login(request, user)
+            return redirect('users:dashboard')
+        return render(request, 'users/register.html', {'errors': serializer.errors})
+    return render(request, 'users/register.html')
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('users:dashboard')
+        return render(request, 'users/login.html', {'error': 'Invalid credentials'})
+    return render(request, 'users/login.html')

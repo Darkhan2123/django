@@ -1,0 +1,23 @@
+{% extends "frontend/base.html" %}
+{% block content %}
+<h2>Trading Order #{{ order.id }}</h2>
+<p><strong>Product:</strong> {{ order.product.name }}</p>
+<p><strong>Type:</strong> {{ order.order_type|capitalize }}</p>
+<p><strong>Quantity:</strong> {{ order.quantity }}</p>
+<p><strong>Price:</strong> {{ order.price }}</p>
+<p><strong>Placed on:</strong> {{ order.created_at|date:"Y-m-d H:i" }}</p>
+
+<h4 class="mt-4">Transactions for this Order:</h4>
+{% if order.transaction_set.all %}
+  <ul>
+    {% for tx in order.transaction_set.all %}
+      <li>
+        Transaction #{{ tx.id }} – {{ tx.quantity }} @ {{ tx.executed_price }}
+        on {{ tx.executed_at|date:"Y-m-d H:i" }}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No transactions executed for this order yet.</p>
+{% endif %}
+{% endblock %}

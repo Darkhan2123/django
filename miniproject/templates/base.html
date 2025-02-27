@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="{% url 'frontend:index' %}">🚀 S&T Dashboard</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        {% if user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'frontend:product_list' %}">🛍️ Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'frontend:create_order' %}">📝 Create Order</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'frontend:my_orders' %}">📦 My Orders</a></li>
+          {% if user.role == "admin" or user.role == "trader" %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'frontend:create_trading_order' %}">💱 Create Trade</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'frontend:list_trading_orders' %}">📈 Trading</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'frontend:list_transactions' %}">💵 Transactions</a></li>
+          {% endif %}
+          {% if user.role == "admin" or user.is_staff %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'frontend:analytics' %}">📊 Analytics</a></li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'frontend:logout' %}">🚪 Logout</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'frontend:login' %}">🔑 Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'frontend:register' %}">📝 Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+  {% if messages %}
+    {% for msg in messages %}
+      <div class="alert alert-info">🔔 {{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+
+  <footer class="text-center mt-4 text-muted">
+    © {{ year|default:now:"Y" }} S&T Dashboard. Built with ❤️.
+  </footer>

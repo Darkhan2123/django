@@ -1,0 +1,22 @@
+{% extends "frontend/base.html" %}
+{% block content %}
+<div class="form-container">
+  <h2 class="form-title text-primary">💹 Create Trading Order</h2>
+  <p class="text-muted text-center">Fill out the form to place a new trading order.</p>
+  <form method="POST" class="needs-validation" novalidate>
+    {% csrf_token %}
+    <div class="form-row"><!-- Bootstrap row for two-column layout -->
+      {% for field in form %}
+        <div class="form-group col-md-6">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div class="text-danger small">{{ field.errors|join:", " }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-success btn-block">🚀 Place Order</button>
+  </form>
+</div>
+{% endblock %}

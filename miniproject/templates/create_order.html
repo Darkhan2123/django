@@ -1,0 +1,12 @@
+{% extends "frontend/base.html" %}
+{% block content %}
+<div class="form-container">
+  <h2 class="form-title">📝 Create a New Order</h2>
+  <p class="text-muted text-center">Fill out the details below to place your order.</p>
+  <form method="POST" class="order-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success w-100">🚀 Submit Order</button>
+  </form>
+</div>
+{% endblock %}
